@@ -18,7 +18,7 @@ class FaceCropper:
             print('Writing to file {}'.format(output_folder))
             # Reset the file pointer, so we can read the file again
             image.seek(0)
-            self._save_cropped_faces(image, faces, output_folder)
+            return self._save_cropped_faces(image, faces, output_folder)
 
     def _detect_faces(self, face_file, max_results=100):
         content = face_file.read()
@@ -28,6 +28,7 @@ class FaceCropper:
             image=image, max_results=max_results).face_annotations
 
     def _save_cropped_faces(self, image, faces, output_folder):
+        file_paths = []
         utils.safe_create_directory(output_folder)
         im = Image.open(image)
         for index, face in enumerate(faces):
@@ -36,4 +37,7 @@ class FaceCropper:
                     face.bounding_poly.vertices[0].y,
                     face.bounding_poly.vertices[2].x,
                     face.bounding_poly.vertices[2].y)
-            im.crop(area).save(output_folder + "/" + str(index) + ".png")
+            file_path = output_folder + "/" + str(index) + ".png"
+            im.crop(area).save(file_path)
+            file_paths.append(file_path)
+        return file_paths
