@@ -1,0 +1,1 @@
+API_KEY_FILE="/home/omeryakobi/apikey.json"
